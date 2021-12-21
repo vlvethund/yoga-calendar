@@ -38,7 +38,7 @@ import axios from 'axios'
 import staticField from '../assets/static'
 
 export default {
-  name: 'FormSheet',
+  name: 'form-sheet',
   props: {
     event: {
       type: Object,
@@ -85,7 +85,13 @@ export default {
 
       const {calendarID, googleKey} = staticField;
       try {
-        await axios.patch(`/api/googleapis/calendar/v3/calendars/${calendarID}/events/${this.model.id}?key=${googleKey}`, body, config)
+        await axios.patch(`/api/googleapis/calendar/v3/calendars/${calendarID}/events/${this.model.id}?key=${googleKey}`, body, config).then((_item, error) => {
+          if (error) {
+            this.$emit('error')
+            return
+          }
+          this.$emit('success')
+        })
       } catch (e) {
         console.log(e)
       }

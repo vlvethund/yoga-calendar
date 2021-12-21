@@ -10,19 +10,19 @@
     </v-app-bar>
 
     <v-main>
-      <HelloWorld/>
+      <calendar-main/>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
+import {CalendarMain} from './components';
 
 export default {
   name: 'App',
 
   components: {
-    HelloWorld,
+    CalendarMain,
   },
 
   data: () => ({

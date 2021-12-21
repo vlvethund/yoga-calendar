@@ -1,74 +1,82 @@
 <template>
-  <v-row class="fill-height">
-    <v-col>
-      <v-sheet height="64">
-        <v-toolbar flat color="white">
-          <v-btn fab text small @click="prev">
-            <v-icon small>mdi-chevron-left</v-icon>
-          </v-btn>
-
-          <v-toolbar-title>{{ title }}</v-toolbar-title>
-          <v-btn fab text small @click="next">
-            <v-icon small>mdi-chevron-right</v-icon>
-          </v-btn>
-          <div class="flex-grow-1"></div>
-          <v-menu bottom right>
-            <template v-slot:activator="{ on }">
-              <v-btn outlined v-on="on">
-                <span>{{ typeToLabel[type] }}</span>
-                <v-icon right>mdi-menu-down</v-icon>
+  <div>
+    <v-container>
+      <v-row class="fill-height">
+        <v-col>
+          <v-sheet height="64">
+            <v-toolbar flat color="white">
+              <v-btn fab text small @click="prev">
+                <v-icon >mdi-chevron-left</v-icon>
               </v-btn>
-            </template>
-            <v-list>
-              <v-list-item @click="type = 'week'">
-                <v-list-item-title>Week</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="type = 'month'">
-                <v-list-item-title>Month</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </v-toolbar>
-      </v-sheet>
-      <v-sheet height="900">
-        <v-calendar
-            ref="calendar"
-            v-model="focus"
-            color="primary"
-            :events="events"
-            :event-color="getEventColor"
-            :event-margin-bottom="3"
-            :now="today"
-            :type="type"
-            @click:event="showEvent"
-            @click:more="viewDay"
-            @click:date="setDialogDate"
-            @change="updateRange"
-            locale="ko"
-        />
-        <div v-if="selectedOpen">
-          <v-dialog
-              v-model="selectedOpen"
-              max-width="600"
-          >
-            <form-sheet v-bind:event="selectedEvent"></form-sheet>
-          </v-dialog>
-        </div>
+              <v-toolbar-title>{{ title }}</v-toolbar-title>
+              <v-btn fab text small @click="next">
+                <v-icon>mdi-chevron-right</v-icon>
+              </v-btn>
+              <div class="flex-grow-1"></div>
+              <v-menu bottom right>
+                <template v-slot:activator="{ on }">
+                  <v-btn outlined v-on="on">
+                    <span>{{ typeToLabel[type] }}</span>
+                    <v-icon right>mdi-menu-down</v-icon>
+                  </v-btn>
+                </template>
+                <v-list>
+                  <v-list-item @click="type = 'week'">
+                    <v-list-item-title>Week</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item @click="type = 'month'">
+                    <v-list-item-title>Month</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </v-toolbar>
+          </v-sheet>
+          <v-sheet height="900">
+            <v-calendar
+                ref="calendar"
+                v-model="focus"
+                color="primary"
+                :events="events"
+                :event-color="getEventColor"
+                :event-margin-bottom="3"
+                :now="today"
+                :type="type"
+                @click:event="showEvent"
+                @click:more="viewDay"
+                @click:date="setDialogDate"
+                @change="updateRange"
+                locale="ko"
+            />
+          </v-sheet>
+        </v-col>
+      </v-row>
+    </v-container>
+    <div v-if="selectedOpen">
+      <v-dialog
+          v-model="selectedOpen"
+          max-width="600"
+      >
+        <form-sheet v-bind:event="selectedEvent" @success="onSubmitSuccess"></form-sheet>
+      </v-dialog>
+    </div>
+    <success-snackbar :open="successSnackbarOpen"/>
+    <failure-snackbar :open="failureSnackbarOpen"/>
+  </div>
 
-      </v-sheet>
-    </v-col>
-  </v-row>
 </template>
 
 <script>
 import axios from 'axios';
-import FormSheet from "./FormSheet";
 import staticField from '../assets/static'
+import FormSheet from './FormSheet';
+import {SuccessSnackbar, FailureSnackbar} from "./Snackbars";
 
 export default {
-  name: 'HelloWorld',
+  name: 'calendar-main',
   components: {
     FormSheet,
+    FailureSnackbar,
+    SuccessSnackbar
   },
   data: () => ({
     today: new Date().toISOString().substr(0, 10),
@@ -89,7 +97,9 @@ export default {
     selectedOpen: false,
     events: [],
     dialog: false,
-    dialogDate: false
+    dialogDate: false,
+    successSnackbarOpen: false,
+    failureSnackbarOpen: false,
   }),
   computed: {
     title() {
@@ -208,6 +218,10 @@ export default {
 
       return new Date(`${year}-${month}-${day} ${hour}:${minute}`).toISOString();
     },
+    onSubmitSuccess() {
+      console.log('hi')
+      this.successSnackbarOpen =true
+    }
   }
 }
 </script>
