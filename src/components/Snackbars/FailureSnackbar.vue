@@ -15,6 +15,13 @@
 <script>
 export default {
   name: 'failure-snackbar',
-  props: ['open']
+  mounted() {
+    console.log(this.open);
+  },
+  data(){
+    return({
+      open: this.$store.state.failureSnackbarOpen
+    })
+  }
 }
 </script>

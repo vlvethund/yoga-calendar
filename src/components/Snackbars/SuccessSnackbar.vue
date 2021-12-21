@@ -1,7 +1,7 @@
 <template>
   <v-snackbar
-      :timeout="3"
-      v-model="open"
+      :timeout="-1"
+      v-model="$store.state.successSnackbarOpen"
       color="green"
       absolute
       right
@@ -15,6 +15,5 @@
 <script>
 export default {
   name: 'success-snackbar',
-  props: ['open']
 }
 </script>

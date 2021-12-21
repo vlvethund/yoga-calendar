@@ -6,7 +6,7 @@
           <v-sheet height="64">
             <v-toolbar flat color="white">
               <v-btn fab text small @click="prev">
-                <v-icon >mdi-chevron-left</v-icon>
+                <v-icon>mdi-chevron-left</v-icon>
               </v-btn>
               <v-toolbar-title>{{ title }}</v-toolbar-title>
               <v-btn fab text small @click="next">
@@ -51,18 +51,18 @@
         </v-col>
       </v-row>
     </v-container>
-    <div v-if="selectedOpen">
+    <div v-if="this.$store.state.selectedOpen">
       <v-dialog
-          v-model="selectedOpen"
+          :value="this.$store.state.selectedOpen"
+          @click:outside="clickOutside"
           max-width="600"
       >
-        <form-sheet v-bind:event="selectedEvent" @success="onSubmitSuccess"></form-sheet>
+        <form-sheet v-bind:event="selectedEvent" @submitSuccess="getEvents"></form-sheet>
       </v-dialog>
     </div>
-    <success-snackbar :open="successSnackbarOpen"/>
-    <failure-snackbar :open="failureSnackbarOpen"/>
+    <success-snackbar/>
+    <failure-snackbar/>
   </div>
-
 </template>
 
 <script>
@@ -94,12 +94,9 @@ export default {
     currentlyEditing: null,
     selectedEvent: {},
     selectedElement: null,
-    selectedOpen: false,
     events: [],
     dialog: false,
     dialogDate: false,
-    successSnackbarOpen: false,
-    failureSnackbarOpen: false,
   }),
   computed: {
     title() {
@@ -164,7 +161,6 @@ export default {
           id
         });
       })
-
     },
     setDialogDate() {
     },
@@ -195,13 +191,21 @@ export default {
       //     this.currentlyEditing = null
     },
     showEvent({nativeEvent, event}) {
+      const {attendees, maxCount} = event.details;
+
+      if (attendees.length >= maxCount) {
+        alert('정원이 가득 찼습니다.')
+        return;
+      }
+
       const open = () => {
         this.selectedEvent = event
         this.selectedElement = nativeEvent.target
-        setTimeout(() => this.selectedOpen = true, 10)
-      }
+        setTimeout(() => this.$store.dispatch('setSelectedOpen', true), 10)
+      };
+
       if (this.selectedOpen) {
-        this.selectedOpen = false
+        this.$store.dispatch('setSelectedOpen', false)
         setTimeout(open, 10)
       } else {
         open()
@@ -218,9 +222,8 @@ export default {
 
       return new Date(`${year}-${month}-${day} ${hour}:${minute}`).toISOString();
     },
-    onSubmitSuccess() {
-      console.log('hi')
-      this.successSnackbarOpen =true
+    clickOutside() {
+      this.$store.dispatch('setSelectedOpen', false)
     }
   }
 }
