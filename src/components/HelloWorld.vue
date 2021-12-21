@@ -1,58 +1,213 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
-  </div>
+  <v-row class="fill-height">
+    <v-col>
+      <v-sheet height="64">
+        <v-toolbar flat color="white">
+          <v-btn fab text small @click="prev">
+            <v-icon small>mdi-chevron-left</v-icon>
+          </v-btn>
+
+          <v-toolbar-title>{{ title }}</v-toolbar-title>
+          <v-btn fab text small @click="next">
+            <v-icon small>mdi-chevron-right</v-icon>
+          </v-btn>
+          <div class="flex-grow-1"></div>
+          <v-menu bottom right>
+            <template v-slot:activator="{ on }">
+              <v-btn outlined v-on="on">
+                <span>{{ typeToLabel[type] }}</span>
+                <v-icon right>mdi-menu-down</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item @click="type = 'week'">
+                <v-list-item-title>Week</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="type = 'month'">
+                <v-list-item-title>Month</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </v-toolbar>
+      </v-sheet>
+      <v-sheet height="900">
+        <v-calendar
+            ref="calendar"
+            v-model="focus"
+            color="primary"
+            :events="events"
+            :event-color="getEventColor"
+            :event-margin-bottom="3"
+            :now="today"
+            :type="type"
+            @click:event="showEvent"
+            @click:more="viewDay"
+            @click:date="setDialogDate"
+            @change="updateRange"
+            locale="ko"
+        />
+        <div v-if="selectedOpen">
+          <v-dialog
+              v-model="selectedOpen"
+              max-width="600"
+          >
+            <form-sheet v-bind:event="selectedEvent"></form-sheet>
+          </v-dialog>
+        </div>
+
+      </v-sheet>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
+import axios from 'axios';
+import FormSheet from "./FormSheet";
+import staticField from '../assets/static'
+
 export default {
   name: 'HelloWorld',
-  props: {
-    msg: String
+  components: {
+    FormSheet,
+  },
+  data: () => ({
+    today: new Date().toISOString().substr(0, 10),
+    focus: new Date().toISOString().substr(0, 10),
+    type: 'month',
+    typeToLabel: {
+      month: 'Month',
+      week: 'Week',
+    },
+    name: null,
+    details: null,
+    start: null,
+    end: null,
+    color: '#1976D2', // default event color
+    currentlyEditing: null,
+    selectedEvent: {},
+    selectedElement: null,
+    selectedOpen: false,
+    events: [],
+    dialog: false,
+    dialogDate: false
+  }),
+  computed: {
+    title() {
+      const {start, end} = this
+      if (!start || !end) {
+        return ''
+      }
+      const startMonth = this.monthFormatter(start)
+      const endMonth = this.monthFormatter(end)
+      const suffixMonth = startMonth === endMonth ? '' : endMonth
+      const startYear = start.year
+      const endYear = end.year
+      const prefixYear = startYear === endYear ? '' : endYear + '년'
+      const startDay = start.day + '일'
+      const endDay = end.day + '일'
+
+      switch (this.type) {
+        case 'month':
+          return `${startYear}년 ${startMonth}`
+        case 'week':
+          return `${startYear}년 ${startMonth} ${startDay} - ${prefixYear} ${suffixMonth} ${endDay} `
+      }
+      return ''
+    },
+    monthFormatter() {
+      return this.$refs.calendar.getFormatter({
+        timeZone: 'UTC', month: 'long',
+      })
+    },
+  },
+  methods: {
+    async getEvents() {
+      this.events = [];
+      const calendarID = staticField.calendarID
+      const minTime = this.toISOString(this.start)
+      const maxTime = this.toISOString(this.end)
+      const googleKey = staticField.googleKey
+
+      const {data} = await axios.get(`/api/googleapis/calendar/v3/calendars/${calendarID}/events?orderBy=startTime&singleEvents=true&timeMax=${maxTime}&timeMin=${minTime}&key=${googleKey}`)
+
+      data.items.map(({description, start, end, id}) => {
+        let details;
+        let defaultMaxCount = 3;
+        const defaultDescription = `{"attendees": [],"maxCount": ${defaultMaxCount}}`;
+        details = JSON.parse(defaultDescription)
+
+        if (description) {
+          if (Number.parseInt(description)) {
+            details.maxCount = Number.parseInt(description);
+          } else {
+            details = JSON.parse(description);
+          }
+        }
+
+        this.events.push({
+          name: `(${details.attendees.length}/${details.maxCount})`,
+          color: '#2196F3',
+          start: new Date(start.dateTime),
+          end: new Date(end.dateTime),
+          timed: true,
+          details,
+          id
+        });
+      })
+
+    },
+    setDialogDate() {
+    },
+    viewDay({date}) {
+      this.focus = date
+      this.type = 'week'
+    },
+    getEventColor(event) {
+      return event.color
+    },
+    setToday() {
+      this.focus = this.today
+    },
+    prev() {
+      this.$refs.calendar.prev()
+    },
+    next() {
+      this.$refs.calendar.next()
+    },
+    editEvent(ev) {
+      this.currentlyEditing = ev.id
+    },
+    async updateEvent() {
+      // await db.collection('calEvent').doc(this.currentlyEditing).update({
+      //   details: ev.details
+      // })
+      // this.selectedOpen = false,
+      //     this.currentlyEditing = null
+    },
+    showEvent({nativeEvent, event}) {
+      const open = () => {
+        this.selectedEvent = event
+        this.selectedElement = nativeEvent.target
+        setTimeout(() => this.selectedOpen = true, 10)
+      }
+      if (this.selectedOpen) {
+        this.selectedOpen = false
+        setTimeout(open, 10)
+      } else {
+        open()
+      }
+      nativeEvent.stopPropagation()
+    },
+    updateRange({start, end}) {
+      this.start = start
+      this.end = end
+      this.getEvents();
+    },
+    toISOString(date) {
+      const {year, month, day, hour, minute} = date
+
+      return new Date(`${year}-${month}-${day} ${hour}:${minute}`).toISOString();
+    },
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>
