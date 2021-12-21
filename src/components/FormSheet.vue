@@ -1,46 +1,46 @@
 <template>
   <div>
-    <v-card>
-      <v-card-title>예약정보 [{{ getReservatingDate }}]</v-card-title>
-      <v-card-text>
-        <v-card>
-          <v-container
-              id="input-usage"
-              fluid
-          >
-            <v-row>
-              <v-col cols="10">
-                <v-text-field
-                    label="이름"
-                    prepend-icon="mdi-account-circle"
-                    :value="this.$data.name"
-                    @input="onNameInput"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="10">
-                <v-text-field
-                    label="전화번호"
-                    prepend-icon="mdi-phone"
-                    :value="mobile"
-                    @keydown="onsomething"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row justify="center">
-              <v-card-actions>
-                <v-btn @click="reserve" color="#FFD600"><b>예약하기</b></v-btn>
-              </v-card-actions>
+  <v-card >
+    <v-card-title>예약정보 [{{ getReservatingDate }}]</v-card-title>
+    <v-card-text>
+      <v-card>
+        <v-container
+            id="input-usage"
+            fluid
+        >
+          <v-row>
+            <v-col cols="10">
+              <v-text-field
+                  label="이름"
+                  prepend-icon="mdi-account-circle"
+                  :value="this.$data.name"
+                  @input="onNameInput"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="10">
+              <v-text-field
+                  label="전화번호"
+                  prepend-icon="mdi-phone"
+                  :value="mobile"
+                  @keydown="onsomething"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-card-actions>
+              <v-btn @click="reserve" color="#FFD600"><b>예약하기</b></v-btn>
+            </v-card-actions>
 
-            </v-row>
+          </v-row>
 
-          </v-container>
-        </v-card>
-        <v-spacer></v-spacer>
-        <v-card min-height="200">
+        </v-container>
+      </v-card>
+      <v-spacer></v-spacer>
+      <v-card min-height="200">
           <div v-if="event.details.attendees.length !==0">
-            <v-list>
+             <v-list>
               <v-subheader>예약자 명단</v-subheader>
               <v-list-item>
                 <v-list-item-content>
@@ -49,12 +49,12 @@
                       <thead>
                       <tr>
                         <th class="text-field" :rowspan="2">이름</th>
-                        <th></th>
+                        <th ></th>
                         <th class="text-field" :rowspan="3">전화번호</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                        <th ></th>
+                        <th ></th>
+                        <th ></th>
+                        <th ></th>
                       </tr>
                       </thead>
                       <tbody>
@@ -67,7 +67,7 @@
                           <span>{{ attendee.name }}</span>
                         </td>
                         <td></td>
-                        <td>{{ attendee.mobile.substr(3, 1) }}XXX-XXXX</td>
+                        <td>{{ attendee.mobile.substr(3,1) }}XXX-XXXX</td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -89,21 +89,21 @@
                 </v-list-item-content>
               </v-list-item>
             </v-list>
-            <!--            <v-list-item-group>-->
-            <!--              <v-list-item v-for="(attendee, index) in event.details.attendees" :key="index">-->
-            <!--                <v-list-item-icon>-->
-            <!--                  <v-avatar color="indigo" :size="29">-->
-            <!--                    <span class="white&#45;&#45;text text-h9">{{ attendee.name.substring(0, 1) }}</span>-->
-            <!--                  </v-avatar>-->
-            <!--                </v-list-item-icon>-->
-            <!--                <v-list-item-content>-->
-            <!--                  <v-list-item-title v-text="attendee.name"></v-list-item-title>-->
-            <!--                </v-list-item-content>-->
-            <!--                <v-list-item-icon>-->
-            <!--                  <v-icon v-text="deleteIcon"></v-icon>-->
-            <!--                </v-list-item-icon>-->
-            <!--              </v-list-item>-->
-            <!--            </v-list-item-group>-->
+<!--            <v-list-item-group>-->
+<!--              <v-list-item v-for="(attendee, index) in event.details.attendees" :key="index">-->
+<!--                <v-list-item-icon>-->
+<!--                  <v-avatar color="indigo" :size="29">-->
+<!--                    <span class="white&#45;&#45;text text-h9">{{ attendee.name.substring(0, 1) }}</span>-->
+<!--                  </v-avatar>-->
+<!--                </v-list-item-icon>-->
+<!--                <v-list-item-content>-->
+<!--                  <v-list-item-title v-text="attendee.name"></v-list-item-title>-->
+<!--                </v-list-item-content>-->
+<!--                <v-list-item-icon>-->
+<!--                  <v-icon v-text="deleteIcon"></v-icon>-->
+<!--                </v-list-item-icon>-->
+<!--              </v-list-item>-->
+<!--            </v-list-item-group>-->
           </div>
           <div v-else>
             <v-list>
@@ -115,10 +115,10 @@
               </v-list-item>
             </v-list>
           </div>
-        </v-card>
+      </v-card>
 
-      </v-card-text>
-    </v-card>
+    </v-card-text>
+  </v-card>
 
     <div v-if="this.deleteModalOpen">
       <v-dialog
@@ -132,7 +132,7 @@
           </v-card-title>
           <v-card-text>
             예약 취소를 위해 핸드폰 번호 끝 4자리를 입력하세요
-            <v-otp-input v-model="otp" length="4"></v-otp-input>
+                <v-otp-input v-model="otp" length="4"></v-otp-input>
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
@@ -187,12 +187,30 @@ export default {
 
       this.event.details.attendees.push({name: this.name, mobile: this.mobile})
 
-      const tokenData = await this.refreshAccessToken()
+      const refreshData = {
+        client_id: staticField.clientId,
+        client_secret: staticField.clientSecret,
+        grant_type: staticField.grantType,
+        refresh_token: staticField.refreshToken,
+      }
 
+
+      const tokenData = await axios.post('https://oauth2.googleapis.com/token', refreshData)
+
+      const body = {
+        summary: `민들레 (${this.event.details.attendees.length}/${this.event.details.maxCount})`,
+        description: JSON.stringify(this.event.details)
+      }
+      const config = {
+        headers: {
+          Authorization: `Bearer ${tokenData.data.access_token}`
+        }
+      }
+
+      const {calendarID, googleKey} = staticField;
       try {
-
-        await this.updateGogleCalendar(tokenData).then((_data, err) => {
-          if (err) {
+        await axios.patch(`/api/googleapis/calendar/v3/calendars/${calendarID}/events/${this.model.id}?key=${googleKey}`, body, config).then((_data, error) => {
+          if (error) {
             this.$store.dispatch('setFailureSnackbarOpen', true);
             this.$store.dispatch('setSelectedOpen', false);
 
@@ -207,12 +225,13 @@ export default {
           setTimeout(() => {
             this.$store.dispatch('setSuccessSnackbarOpen', false)
           }, 4000)
-        });
+        })
+
+
       } catch (e) {
-        console.log(e);
+        console.log(e)
+
       }
-
-
     },
     onNameInput(value) {
       this.name = value
@@ -232,20 +251,37 @@ export default {
 
     },
     async onSubmitCancelReservation() {
-      console.log(this.otp)
       if (this.selectedAttendee.mobile.substr(7, 4) === this.otp) {
 
         this.event.details.attendees = this.event.details.attendees.filter((attendee) => {
-          return !(attendee.name === this.selectedAttendee.name && attendee.mobile === this.selectedAttendee.mobile)
+         return !(attendee.name === this.selectedAttendee.name && attendee.mobile === this.selectedAttendee.mobile)
         })
 
-        console.log(this)
 
-        const tokenData = await this.refreshAccessToken()
+        const refreshData = {
+          client_id: staticField.clientId,
+          client_secret: staticField.clientSecret,
+          grant_type: staticField.grantType,
+          refresh_token: staticField.refreshToken,
+        }
 
+
+        const tokenData = await axios.post('https://oauth2.googleapis.com/token', refreshData)
+
+        const body = {
+          summary: `민들레 (${this.event.details.attendees.length}/${this.event.details.maxCount})`,
+          description: JSON.stringify(this.event.details)
+        }
+        const config = {
+          headers: {
+            Authorization: `Bearer ${tokenData.data.access_token}`
+          }
+        }
+
+        const {calendarID, googleKey} = staticField;
         try {
-          await this.updateGogleCalendar(tokenData).then((_data, err) => {
-            if (err) {
+          await axios.patch(`/api/googleapis/calendar/v3/calendars/${calendarID}/events/${this.model.id}?key=${googleKey}`, body, config).then((_data, error) => {
+            if (error) {
               this.$store.dispatch('setFailureSnackbarOpen', true);
               this.$store.dispatch('setSelectedOpen', false);
 
@@ -260,56 +296,22 @@ export default {
             setTimeout(() => {
               this.$store.dispatch('setSuccessSnackbarOpen', false)
             }, 4000)
-          });
+          })
+
+
         } catch (e) {
-          console.log(e);
+          console.log(e)
+
         }
+
+
+
+
+
 
         this.deleteModalOpen = false;
       }
     }
-  },
-  async refreshAccessToken() {
-    const refreshData = {
-      client_id: staticField.clientId,
-      client_secret: staticField.clientSecret,
-      grant_type: staticField.grantType,
-      refresh_token: staticField.refreshToken,
-    }
-
-    return axios.post('https://oauth2.googleapis.com/token', refreshData)
-  },
-  async updateGogleCalendar(tokenData) {
-    const body = {
-      summary: `민들레 (${this.event.details.attendees.length}/${this.event.details.maxCount})`,
-      description: JSON.stringify(this.event.details)
-    }
-    const config = {
-      headers: {
-        Authorization: `Bearer ${tokenData.data.access_token}`
-      }
-    };
-
-    const {calendarID, googleKey} = staticField;
-
-
-    return axios.patch(`/api/googleapis/calendar/v3/calendars/${calendarID}/events/${this.model.id}?key=${googleKey}`, body, config).then((_data, error) => {
-      if (error) {
-        this.$store.dispatch('setFailureSnackbarOpen', true);
-        this.$store.dispatch('setSelectedOpen', false);
-
-        setTimeout(() => {
-          this.$store.dispatch('setFailureSnackbarOpen', false)
-        }, 4000)
-        return
-      }
-
-      this.$store.dispatch('setSuccessSnackbarOpen', true);
-      this.$emit('submitSuccess')
-      setTimeout(() => {
-        this.$store.dispatch('setSuccessSnackbarOpen', false)
-      }, 4000)
-    })
   }
 }
 </script>
