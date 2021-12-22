@@ -1,7 +1,8 @@
 <template>
   <div>
+
     <v-card>
-      <v-card-title> 예약 정보 [ {{ getReservatingDate }} ]</v-card-title>
+      <v-card-title> 예약 정보 [ {{ reservatingDate }} ]</v-card-title>
       <v-card-text>
         <v-card>
           <v-container
@@ -12,6 +13,7 @@
               <v-col cols="10">
                 <v-text-field
                     label="이름"
+                    color="#FEA401"
                     prepend-icon="mdi-account-circle"
                     :value="this.$data.name"
                     @input="onNameInput"
@@ -23,6 +25,7 @@
               <v-col cols="10">
                 <v-text-field
                     label="전화번호"
+                    color="#FEA401"
                     prepend-icon="mdi-phone"
                     :value="mobile"
                     @input="onMobileInput"
@@ -66,7 +69,7 @@
                           :key="index"
                       >
                         <td>
-                          <v-avatar color="red" :size="5"></v-avatar>
+                          <v-avatar :color="randomColors[index]" :size="5"></v-avatar>
                           <span>{{ attendee.name }}</span>
                         </td>
                         <td></td>
@@ -110,7 +113,7 @@
           </div>
           <div v-else>
             <v-list>
-              <v-subheader>예약자 명단</v-subheader>
+              <v-subheader>예약자 명단 ({{ event.details.attendees.length }}/{{ event.details.maxCount }})</v-subheader>
               <v-list-item>
                 <v-list-item-content>
                   <span class="grey--text font-italic text-h8">예약자가 없습니다</span>
@@ -192,6 +195,10 @@ export default {
     event: {
       type: Object,
       required: true
+    },
+    onSucess: {
+      type: Function,
+      required: true
     }
   },
   data() {
@@ -220,9 +227,13 @@ export default {
     });
   },
   computed: {
-    getReservatingDate() {
+    reservatingDate() {
       return dayjs(this.model.start).format('M월 DD일 HH시');
+    },
+    randomColors() {
+      return Util.shuffleArray(staticField.colors)
     }
+
   },
   methods: {
     async reserve() {
@@ -281,20 +292,16 @@ export default {
             }, 4000)
             return
           }
-
           this.$store.dispatch('setSuccessMessage', '예약 성공🥰 🤸‍♀️🙏🎈👨‍🎤🎉')
-          console.log('hi');
           this.$store.dispatch('setSuccessSnackbarOpen', true);
-          this.$emit('submitsuccess')
           setTimeout(() => {
             this.$store.dispatch('setSuccessSnackbarOpen', false)
           }, 4000)
         })
-
-
       } catch (e) {
         console.log(e)
-
+      } finally {
+        this.onSucess();
       }
     },
     onNameInput(value) {
@@ -360,7 +367,8 @@ export default {
 
             this.$store.dispatch('setSuccessMessage', '예약을 취소했습니다👋')
             this.$store.dispatch('setSuccessSnackbarOpen', true);
-            this.$emit('submitsuccess')
+            this.$emit('success')
+            this.$emit('test');
             setTimeout(() => {
               this.$store.dispatch('setSuccessSnackbarOpen', false)
             }, 4000)
@@ -370,6 +378,8 @@ export default {
         } catch (e) {
           console.log(e)
 
+        } finally {
+          this.onSucess();
         }
 
         this.deleteModalOpen = false;
@@ -390,7 +400,7 @@ export default {
     },
     onDialogKeyDown(e) {
       Util.keyDownEventHandler(e, () => this.dialogOpen = false);
-    }
+    },
   }
 }
 </script>

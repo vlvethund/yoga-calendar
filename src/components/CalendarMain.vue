@@ -1,5 +1,5 @@
 <template>
-  <div @wheel="onScroll">
+  <div>
     <v-container>
       <v-row class="fill-height">
         <v-col>
@@ -53,7 +53,7 @@
           @keydown="onKeyDown"
           max-width="600"
       >
-        <form-sheet v-bind:event="selectedEvent" @submitsuccess="getEvents"></form-sheet>
+        <FormSheet v-bind:event="selectedEvent" :onSucess="getEvents"></FormSheet>
       </v-dialog>
     </div>
   </div>
@@ -122,7 +122,6 @@ export default {
   },
   methods: {
     async getEvents() {
-      console.log('hihi');
       this.events = [];
       const calendarID = staticField.calendarID
       const minTime = this.toISOString(this.start)
@@ -148,12 +147,12 @@ export default {
         const hourForColor = new Date(start.dateTime).getHours()
         this.events.push({
           name: `(${details.attendees.length}/${details.maxCount})`,
-          color: staticField.scheduleColors[hourForColor - 9],
+          color: staticField.colors[hourForColor - 9],
           start: new Date(start.dateTime),
           end: new Date(end.dateTime),
           timed: true,
           details,
-          id
+          id,
         });
       })
     },
@@ -169,24 +168,11 @@ export default {
     getEventColor(event) {
       return event.color
     },
-    setToday() {
-      this.focus = this.today
-    },
     prev() {
       this.$refs.calendar.prev()
     },
     next() {
       this.$refs.calendar.next()
-    },
-    editEvent(ev) {
-      this.currentlyEditing = ev.id
-    },
-    async updateEvent() {
-      // await db.collection('calEvent').doc(this.currentlyEditing).update({
-      //   details: ev.details
-      // })
-      // this.selectedOpen = false,
-      //     this.currentlyEditing = null
     },
     showEvent({nativeEvent, event}) {
       const open = () => {
@@ -224,16 +210,9 @@ export default {
       this.toggleExclusive = 1
       this.type = 'week';
     },
-    onScroll(e) {
-      if (e.deltaY > 0) {
-        this.next()
-      } else {
-        this.prev()
-      }
-    },
     onKeyDown(e) {
       Util.keyDownEventHandler(e, () => this.$store.dispatch('setSelectedOpen', false));
-    }
+    },
   }
 }
 </script>
