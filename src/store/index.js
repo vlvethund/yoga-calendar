@@ -8,6 +8,8 @@ export default new Vuex.Store({
     selectedOpen: false,
     successSnackbarOpen: false,
     failureSnackbarOpen: false,
+    failureMessage: '',
+    successMessage: '',
   },
   mutations: {
     setSelectedOpen(state, bool) {
@@ -18,6 +20,12 @@ export default new Vuex.Store({
     },
     setFailureSnackbarOpen(state, bool) {
       state.failureSnackbarOpen = bool;
+    },
+    setFailureMessage(state, msg) {
+      state.failureMessage = msg;
+    },
+    setSuccessMessage(state, msg) {
+      state.successMessage = msg;
     }
   },
   actions: {
@@ -29,6 +37,12 @@ export default new Vuex.Store({
     },
     setFailureSnackbarOpen({commit}, bool) {
       commit('setFailureSnackbarOpen', bool)
+    },
+    setFailureMessage({commit}, msg) {
+      commit('setFailureMessage', msg);
+    },
+    setSuccessMessage({commit}, msg) {
+      commit('setSuccessMessage', msg);
     }
   },
   modules: {

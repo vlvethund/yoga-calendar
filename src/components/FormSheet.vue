@@ -1,47 +1,50 @@
 <template>
   <div>
-  <v-card >
-    <v-card-title>예약정보 [{{ getReservatingDate }}]</v-card-title>
-    <v-card-text>
-      <v-card>
-        <v-container
-            id="input-usage"
-            fluid
-        >
-          <v-row>
-            <v-col cols="10">
-              <v-text-field
-                  label="이름"
-                  prepend-icon="mdi-account-circle"
-                  :value="this.$data.name"
-                  @input="onNameInput"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="10">
-              <v-text-field
-                  label="전화번호"
-                  prepend-icon="mdi-phone"
-                  :value="mobile"
-                  @keydown="onsomething"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <v-row justify="center">
-            <v-card-actions>
-              <v-btn @click="reserve" color="#FFD600"><b>예약하기</b></v-btn>
-            </v-card-actions>
+    <v-card>
+      <v-card-title> 예약 정보 [ {{ getReservatingDate }} ]</v-card-title>
+      <v-card-text>
+        <v-card>
+          <v-container
+              id="input-usage"
+              fluid
+          >
+            <v-row>
+              <v-col cols="10">
+                <v-text-field
+                    label="이름"
+                    prepend-icon="mdi-account-circle"
+                    :value="this.$data.name"
+                    @input="onNameInput"
+                    :rules="this.rulesName"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="10">
+                <v-text-field
+                    label="전화번호"
+                    prepend-icon="mdi-phone"
+                    :value="mobile"
+                    @input="onMobileInput"
+                    @keydown="onsomething"
+                    :rules="this.rulesMobile"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row justify="center">
+              <v-card-actions>
+                <v-btn @click="reserve" color="#FFD600" :disabled="this.reserveButtonDisabled">예약하기🧘‍♀️</v-btn>
+              </v-card-actions>
 
-          </v-row>
+            </v-row>
 
-        </v-container>
-      </v-card>
-      <v-spacer></v-spacer>
-      <v-card min-height="200">
+          </v-container>
+        </v-card>
+        <v-spacer></v-spacer>
+        <v-card min-height="200">
           <div v-if="event.details.attendees.length !==0">
-             <v-list>
-              <v-subheader>예약자 명단</v-subheader>
+            <v-list>
+              <v-subheader>예약자 명단 ({{ event.details.attendees.length }}/{{ event.details.maxCount }})</v-subheader>
               <v-list-item>
                 <v-list-item-content>
                   <v-simple-table>
@@ -49,12 +52,12 @@
                       <thead>
                       <tr>
                         <th class="text-field" :rowspan="2">이름</th>
-                        <th ></th>
+                        <th></th>
                         <th class="text-field" :rowspan="3">전화번호</th>
-                        <th ></th>
-                        <th ></th>
-                        <th ></th>
-                        <th ></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
                       </tr>
                       </thead>
                       <tbody>
@@ -67,7 +70,7 @@
                           <span>{{ attendee.name }}</span>
                         </td>
                         <td></td>
-                        <td>{{ attendee.mobile.substr(3,1) }}XXX-XXXX</td>
+                        <td>{{ attendee.mobile.substr(3, 1) }}XXX-XXXX</td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -89,21 +92,21 @@
                 </v-list-item-content>
               </v-list-item>
             </v-list>
-<!--            <v-list-item-group>-->
-<!--              <v-list-item v-for="(attendee, index) in event.details.attendees" :key="index">-->
-<!--                <v-list-item-icon>-->
-<!--                  <v-avatar color="indigo" :size="29">-->
-<!--                    <span class="white&#45;&#45;text text-h9">{{ attendee.name.substring(0, 1) }}</span>-->
-<!--                  </v-avatar>-->
-<!--                </v-list-item-icon>-->
-<!--                <v-list-item-content>-->
-<!--                  <v-list-item-title v-text="attendee.name"></v-list-item-title>-->
-<!--                </v-list-item-content>-->
-<!--                <v-list-item-icon>-->
-<!--                  <v-icon v-text="deleteIcon"></v-icon>-->
-<!--                </v-list-item-icon>-->
-<!--              </v-list-item>-->
-<!--            </v-list-item-group>-->
+            <!--            <v-list-item-group>-->
+            <!--              <v-list-item v-for="(attendee, index) in event.details.attendees" :key="index">-->
+            <!--                <v-list-item-icon>-->
+            <!--                  <v-avatar color="indigo" :size="29">-->
+            <!--                    <span class="white&#45;&#45;text text-h9">{{ attendee.name.substring(0, 1) }}</span>-->
+            <!--                  </v-avatar>-->
+            <!--                </v-list-item-icon>-->
+            <!--                <v-list-item-content>-->
+            <!--                  <v-list-item-title v-text="attendee.name"></v-list-item-title>-->
+            <!--                </v-list-item-content>-->
+            <!--                <v-list-item-icon>-->
+            <!--                  <v-icon v-text="deleteIcon"></v-icon>-->
+            <!--                </v-list-item-icon>-->
+            <!--              </v-list-item>-->
+            <!--            </v-list-item-group>-->
           </div>
           <div v-else>
             <v-list>
@@ -115,24 +118,30 @@
               </v-list-item>
             </v-list>
           </div>
-      </v-card>
+        </v-card>
 
-    </v-card-text>
-  </v-card>
+      </v-card-text>
+    </v-card>
 
     <div v-if="this.deleteModalOpen">
       <v-dialog
           v-model="this.deleteModalOpen"
           width="500"
           @click:outside="() => {this.deleteModalOpen = false}"
+          @keydown="onDeleteModalKeyDown"
       >
         <v-card>
-          <v-card-title class="text-h5 red white--text ">
-            Privacy Policy
+          <v-card-title class="text-h5 ">
+            예약취소
           </v-card-title>
           <v-card-text>
-            예약 취소를 위해 핸드폰 번호 끝 4자리를 입력하세요
+            <v-row>
+              <v-col md="6">
                 <v-otp-input v-model="otp" length="4"></v-otp-input>
+              </v-col>
+            </v-row>
+            예약 취소를 위해 핸드폰 번호 끝 4자리를 입력하세요
+
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
@@ -148,16 +157,37 @@
         </v-card>
       </v-dialog>
     </div>
+    <div v-if="this.dialogOpen">
+      <v-dialog
+          width="500"
+          v-model="this.dialogOpen"
+          @click:outside="() => {this.dialogOpen = false}"
+          @keydown="onDialogKeyDown"
+      >
+        <alert
+            :msg="this.dialogMsg"
+            :ok-msg="this.okMsg"
+            @clickDialogOk="clickDialogOk"
+        />
+      </v-dialog>
+    </div>
   </div>
 </template>
 
 <script>
 import dayjs from 'dayjs'
 import axios from 'axios'
+import _ from 'lodash'
 import staticField from '../assets/static'
+import Alert from "./Dialogs/Alert"
+import Util from '../assets/util'
+
+const numberPattern = /^[0-9]*$/
+const mobilePattern = /^01([0|1|6|7|8|9])([0-9]{3,4})([0-9]{4})$/;
 
 export default {
   name: 'form-sheet',
+  components: {Alert},
   props: {
     event: {
       type: Object,
@@ -173,6 +203,20 @@ export default {
       deleteModalOpen: false,
       otp: '',
       selectedAttendee: null,
+      dialogOpen: false,
+      dialogMsg: '',
+      rulesMobile: [
+        value => !!value || '핸드폰 번호를 꼭 입력하셔야되요',
+        value => (value || '').length < 12 || '11자리만 입력해주세요!!',
+        value => {
+          return numberPattern.test(value) || '숫자만 입력해주세요!!'
+        }
+      ],
+      rulesName: [
+        value => !!value || '이름을 알려주세요..'
+      ],
+      reserveButtonDisabled: true,
+      okMsg: ''
     });
   },
   computed: {
@@ -182,6 +226,23 @@ export default {
   },
   methods: {
     async reserve() {
+
+      const {attendees, maxCount} = this.event.details;
+
+      if (attendees.length >= maxCount) {
+        this.dialogOpen = true;
+        this.dialogMsg = '죄송해요. 정원이 가득 찼습니다.'
+        this.okMsg = '어쩔 수 없죠😥'
+        return;
+      }
+
+      const index = _.findIndex(attendees, (attendee) => attendee.name === this.name && attendee.mobile === this.mobile);
+      if (index >= 0) {
+        this.dialogOpen = true;
+        this.dialogMsg = '이미 등록하셨는데요?'
+        this.okMsg = '알겠습니다😅'
+        return;
+      }
 
       await this.$store.dispatch('setSelectedOpen', false);
 
@@ -211,6 +272,7 @@ export default {
       try {
         await axios.patch(`/api/googleapis/calendar/v3/calendars/${calendarID}/events/${this.model.id}?key=${googleKey}`, body, config).then((_data, error) => {
           if (error) {
+            this.$store.dispatch('setFailureMessage', '예약에 실패했습니다. 관리자에게 문의해주세요👨‍💻')
             this.$store.dispatch('setFailureSnackbarOpen', true);
             this.$store.dispatch('setSelectedOpen', false);
 
@@ -220,8 +282,10 @@ export default {
             return
           }
 
+          this.$store.dispatch('setSuccessMessage', '예약 성공🥰 🤸‍♀️🙏🎈👨‍🎤🎉')
+          console.log('hi');
           this.$store.dispatch('setSuccessSnackbarOpen', true);
-          this.$emit('submitSuccess')
+          this.$emit('submitsuccess')
           setTimeout(() => {
             this.$store.dispatch('setSuccessSnackbarOpen', false)
           }, 4000)
@@ -235,14 +299,13 @@ export default {
     },
     onNameInput(value) {
       this.name = value
+      this.activateReserveButton()
     },
-    onMobileInput() {
+    onMobileInput(value) {
+      this.mobile = value
+      this.activateReserveButton()
     },
-    onsomething(v) {
-      console.log(v);
-    },
-    abc() {
-      console.log('hi')
+    onsomething() {
     },
     onClickDeleteBtn(attendee) {
       this.deleteModalOpen = true;
@@ -251,10 +314,13 @@ export default {
 
     },
     async onSubmitCancelReservation() {
+
+      await this.$store.dispatch('setSelectedOpen', false);
+
       if (this.selectedAttendee.mobile.substr(7, 4) === this.otp) {
 
         this.event.details.attendees = this.event.details.attendees.filter((attendee) => {
-         return !(attendee.name === this.selectedAttendee.name && attendee.mobile === this.selectedAttendee.mobile)
+          return !(attendee.name === this.selectedAttendee.name && attendee.mobile === this.selectedAttendee.mobile)
         })
 
 
@@ -282,6 +348,7 @@ export default {
         try {
           await axios.patch(`/api/googleapis/calendar/v3/calendars/${calendarID}/events/${this.model.id}?key=${googleKey}`, body, config).then((_data, error) => {
             if (error) {
+              this.$store.dispatch('setFailureMessage', '예약취소가 안됐어요. 관리자에게 문의해주세요👨‍💻')
               this.$store.dispatch('setFailureSnackbarOpen', true);
               this.$store.dispatch('setSelectedOpen', false);
 
@@ -291,8 +358,9 @@ export default {
               return
             }
 
+            this.$store.dispatch('setSuccessMessage', '예약을 취소했습니다👋')
             this.$store.dispatch('setSuccessSnackbarOpen', true);
-            this.$emit('submitSuccess')
+            this.$emit('submitsuccess')
             setTimeout(() => {
               this.$store.dispatch('setSuccessSnackbarOpen', false)
             }, 4000)
@@ -304,14 +372,32 @@ export default {
 
         }
 
-
-
-
-
-
         this.deleteModalOpen = false;
       }
+    },
+    clickDialogOk() {
+      this.dialogOpen = false;
+    },
+    activateReserveButton() {
+      if (numberPattern.test(this.mobile) && this.mobile && mobilePattern.test(this.mobile) && this.name && (this.mobile || '').length < 12) {
+        this.reserveButtonDisabled = false;
+      } else {
+        this.reserveButtonDisabled = true;
+      }
+    },
+    onDeleteModalKeyDown(e) {
+      Util.keyDownEventHandler(e, () => this.deleteModalOpen = false);
+    },
+    onDialogKeyDown(e) {
+      Util.keyDownEventHandler(e, () => this.dialogOpen = false);
     }
   }
 }
 </script>
+
+<style scoped>
+.v-avatar {
+  margin-right: 10px;
+}
+
+</style>

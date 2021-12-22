@@ -4,5 +4,6 @@ export default {
     grantType: 'refresh_token',
     refreshToken: '1//04AhxVO4ahQDaCgYIARAAGAQSNwF-L9Ir9nZ-4rkc_CxVC-GqiH5b3YnqOKCKNFVFh5Lm_KliKvFyGgrtGN5lyWkJY1CDc1swsDs',
     googleKey :'AIzaSyDppODn4dpCsXaRruEy_afr_dMpAC4-l-Y',
-    calendarID : 'vlvethund@gmail.com'
+    calendarID : 'vlvethund@gmail.com',
+    scheduleColors : ['#FF7262','#F9CE0B', '#A259FF', '#1ABCFE', '#0ACF83', '#B3D0FD', '#A0EBD9', '#009688', '#039BE5', '#FF7262','#C7B9FF', '#0ACF83', '#F9CE0B']
 }

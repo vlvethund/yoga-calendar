@@ -1,4 +1,5 @@
 <template>
+  <div class="aaaa">
   <v-app>
     <v-app-bar
       app
@@ -8,21 +9,24 @@
      <h1>mindeulle.yoga</h1>
       </div>
     </v-app-bar>
-
     <v-main>
       <calendar-main/>
+      <success-snackbar/>
+      <failure-snackbar/>
     </v-main>
   </v-app>
+  </div>
 </template>
 
 <script>
-import {CalendarMain} from './components';
+import {CalendarMain, FailureSnackbar, SuccessSnackbar} from './components';
 
 export default {
   name: 'App',
-
   components: {
     CalendarMain,
+    FailureSnackbar,
+    SuccessSnackbar
   },
 
   data: () => ({

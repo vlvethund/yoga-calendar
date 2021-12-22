@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @wheel="onScroll">
     <v-container>
       <v-row class="fill-height">
         <v-col>
@@ -13,29 +13,24 @@
                 <v-icon>mdi-chevron-right</v-icon>
               </v-btn>
               <div class="flex-grow-1"></div>
-              <v-menu bottom right>
-                <template v-slot:activator="{ on }">
-                  <v-btn outlined v-on="on">
-                    <span>{{ typeToLabel[type] }}</span>
-                    <v-icon right>mdi-menu-down</v-icon>
-                  </v-btn>
-                </template>
-                <v-list>
-                  <v-list-item @click="type = 'week'">
-                    <v-list-item-title>Week</v-list-item-title>
-                  </v-list-item>
-                  <v-list-item @click="type = 'month'">
-                    <v-list-item-title>Month</v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
+              <v-btn-toggle v-model="toggleExclusive" dense mandatory borderless>
+                <v-btn @click="onClickToggleMonth">
+                  <!--                  <v-icon >mdi-calendar-month</v-icon> -->
+                  📅
+                </v-btn>
+
+                <v-btn @click="onClickToggleWeek">
+                  <!--                  <v-icon >mdi-view-week-outline</v-icon>-->
+                  📄
+                </v-btn>
+              </v-btn-toggle>
+
             </v-toolbar>
           </v-sheet>
           <v-sheet height="900">
             <v-calendar
                 ref="calendar"
                 v-model="focus"
-                color="primary"
                 :events="events"
                 :event-color="getEventColor"
                 :event-margin-bottom="3"
@@ -55,13 +50,12 @@
       <v-dialog
           :value="this.$store.state.selectedOpen"
           @click:outside="clickOutside"
+          @keydown="onKeyDown"
           max-width="600"
       >
-        <form-sheet v-bind:event="selectedEvent" @submitSuccess="getEvents"></form-sheet>
+        <form-sheet v-bind:event="selectedEvent" @submitsuccess="getEvents"></form-sheet>
       </v-dialog>
     </div>
-    <success-snackbar/>
-    <failure-snackbar/>
   </div>
 </template>
 
@@ -69,14 +63,12 @@
 import axios from 'axios';
 import staticField from '../assets/static'
 import FormSheet from './FormSheet';
-import {SuccessSnackbar, FailureSnackbar} from "./Snackbars";
+import Util from '../assets/util'
 
 export default {
   name: 'calendar-main',
   components: {
     FormSheet,
-    FailureSnackbar,
-    SuccessSnackbar
   },
   data: () => ({
     today: new Date().toISOString().substr(0, 10),
@@ -97,6 +89,7 @@ export default {
     events: [],
     dialog: false,
     dialogDate: false,
+    toggleExclusive: 0
   }),
   computed: {
     title() {
@@ -129,6 +122,7 @@ export default {
   },
   methods: {
     async getEvents() {
+      console.log('hihi');
       this.events = [];
       const calendarID = staticField.calendarID
       const minTime = this.toISOString(this.start)
@@ -151,9 +145,10 @@ export default {
           }
         }
 
+        const hourForColor = new Date(start.dateTime).getHours()
         this.events.push({
           name: `(${details.attendees.length}/${details.maxCount})`,
-          color: '#2196F3',
+          color: staticField.scheduleColors[hourForColor - 9],
           start: new Date(start.dateTime),
           end: new Date(end.dateTime),
           timed: true,
@@ -163,10 +158,13 @@ export default {
       })
     },
     setDialogDate() {
+      this.type = 'week'
+      this.toggleExclusive = 1;
     },
     viewDay({date}) {
       this.focus = date
       this.type = 'week'
+      this.toggleExclusive = 1;
     },
     getEventColor(event) {
       return event.color
@@ -191,13 +189,6 @@ export default {
       //     this.currentlyEditing = null
     },
     showEvent({nativeEvent, event}) {
-      const {attendees, maxCount} = event.details;
-
-      if (attendees.length >= maxCount) {
-        alert('정원이 가득 찼습니다.')
-        return;
-      }
-
       const open = () => {
         this.selectedEvent = event
         this.selectedElement = nativeEvent.target
@@ -224,6 +215,24 @@ export default {
     },
     clickOutside() {
       this.$store.dispatch('setSelectedOpen', false)
+    },
+    onClickToggleMonth() {
+      this.toggleExclusive = 0
+      this.type = 'month';
+    },
+    onClickToggleWeek() {
+      this.toggleExclusive = 1
+      this.type = 'week';
+    },
+    onScroll(e) {
+      if (e.deltaY > 0) {
+        this.next()
+      } else {
+        this.prev()
+      }
+    },
+    onKeyDown(e) {
+      Util.keyDownEventHandler(e, () => this.$store.dispatch('setSelectedOpen', false));
     }
   }
 }

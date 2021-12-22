@@ -8,7 +8,7 @@
       rounded="pill"
       top
   >
-    예약성공!!
+    {{ this.$store.state.successMessage }}
   </v-snackbar>
 </template>
 

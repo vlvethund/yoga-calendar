@@ -8,16 +8,13 @@
       rounded="pill"
       top
   >
-    예약에 실패했습니다. 관리자에게 문의해주세요.
+    {{ this.$store.state.failureMessage }}
   </v-snackbar>
 </template>
 
 <script>
 export default {
   name: 'failure-snackbar',
-  mounted() {
-    console.log(this.open);
-  },
   data(){
     return({
       open: this.$store.state.failureSnackbarOpen
