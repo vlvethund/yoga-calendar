@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <v-card>
       <v-card-title> 예약 정보 [ {{ reservatingDate }} ]</v-card-title>
       <v-card-text>
@@ -281,7 +280,7 @@ export default {
 
       const {calendarID, googleKey} = staticField;
       try {
-        await axios.patch(`/api/googleapis/calendar/v3/calendars/${calendarID}/events/${this.model.id}?key=${googleKey}`, body, config).then((_data, error) => {
+        await axios.patch(`${process.env.VUE_APP_GOOGLE_API}/calendar/v3/calendars/${calendarID}/events/${this.model.id}?key=${googleKey}`, body, config).then((_data, error) => {
           if (error) {
             this.$store.dispatch('setFailureMessage', '예약에 실패했습니다. 관리자에게 문의해주세요👨‍💻')
             this.$store.dispatch('setFailureSnackbarOpen', true);
@@ -353,7 +352,7 @@ export default {
 
         const {calendarID, googleKey} = staticField;
         try {
-          await axios.patch(`/api/googleapis/calendar/v3/calendars/${calendarID}/events/${this.model.id}?key=${googleKey}`, body, config).then((_data, error) => {
+          await axios.patch(`${process.env.VUE_APP_GOOGLE_API}/calendar/v3/calendars/${calendarID}/events/${this.model.id}?key=${googleKey}`, body, config).then((_data, error) => {
             if (error) {
               this.$store.dispatch('setFailureMessage', '예약취소가 안됐어요. 관리자에게 문의해주세요👨‍💻')
               this.$store.dispatch('setFailureSnackbarOpen', true);

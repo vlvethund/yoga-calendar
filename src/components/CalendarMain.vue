@@ -15,19 +15,19 @@
               <div class="flex-grow-1"></div>
               <v-btn-toggle v-model="toggleExclusive" dense mandatory borderless>
                 <v-btn @click="onClickToggleMonth">
-                  <!--                  <v-icon >mdi-calendar-month</v-icon> -->
-                  📅
+                                    <v-icon >mdi-calendar-month</v-icon>
+<!--                  📅-->
                 </v-btn>
 
                 <v-btn @click="onClickToggleWeek">
-                  <!--                  <v-icon >mdi-view-week-outline</v-icon>-->
-                  📄
+                                    <v-icon >mdi-view-week-outline</v-icon>
+<!--                  📄-->
                 </v-btn>
               </v-btn-toggle>
 
             </v-toolbar>
           </v-sheet>
-          <v-sheet height="900">
+          <v-sheet height="80vh">
             <v-calendar
                 ref="calendar"
                 v-model="focus"
@@ -41,6 +41,7 @@
                 @click:date="setDialogDate"
                 @change="updateRange"
                 locale="ko"
+                :weekdays="[1,2,3,4,5]"
             />
           </v-sheet>
         </v-col>
@@ -127,8 +128,11 @@ export default {
       const minTime = this.toISOString(this.start)
       const maxTime = this.toISOString(this.end)
       const googleKey = staticField.googleKey
+      console.log(minTime);
+      console.log(maxTime);
 
-      const {data} = await axios.get(`/api/googleapis/calendar/v3/calendars/${calendarID}/events?orderBy=startTime&singleEvents=true&timeMax=${maxTime}&timeMin=${minTime}&key=${googleKey}`)
+      const {data} = await axios.get(`${process.env.VUE_APP_GOOGLE_API}/calendar/v3/calendars/${calendarID}/events?orderBy=startTime&singleEvents=true&timeMax=${maxTime}&timeMin=${minTime}&key=${googleKey}`)
+      console.log(data.items);
 
       data.items.map(({description, start, end, id}) => {
         let details;
@@ -196,8 +200,8 @@ export default {
     },
     toISOString(date) {
       const {year, month, day, hour, minute} = date
-
-      return new Date(`${year}-${month}-${day} ${hour}:${minute}`).toISOString();
+      console.log(date)
+      return new Date(year, month-1, day, hour, minute).toISOString();
     },
     clickOutside() {
       this.$store.dispatch('setSelectedOpen', false)

@@ -15,9 +15,6 @@ module.exports = {
       '/api/accounts': {
         target: 'https://accounts.google.com',
       },
-      '/api/something': {
-        target: 'http://localhost:3000'
-      }
     }
   }
 }
