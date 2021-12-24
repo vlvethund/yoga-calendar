@@ -1,7 +1,7 @@
 <template>
   <v-snackbar
-      :timeout="3"
-      v-model="open"
+      :timeout="-1"
+      v-model="$store.state.failureSnackbarOpen"
       color="red"
       absolute
       right
@@ -15,10 +15,5 @@
 <script>
 export default {
   name: 'failure-snackbar',
-  data(){
-    return({
-      open: this.$store.state.failureSnackbarOpen
-    })
-  }
 }
 </script>

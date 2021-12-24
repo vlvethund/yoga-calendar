@@ -8,20 +8,20 @@
               <v-btn fab text small @click="prev">
                 <v-icon dense>mdi-chevron-left</v-icon>
               </v-btn>
-              <v-toolbar-title >{{ title }}</v-toolbar-title>
+              <v-toolbar-title>{{ title }}</v-toolbar-title>
               <v-btn fab text small @click="next">
                 <v-icon dense>mdi-chevron-right</v-icon>
               </v-btn>
               <div class="flex-grow-1"></div>
               <v-btn-toggle v-model="toggleExclusive" dense mandatory borderless>
                 <v-btn @click="onClickToggleMonth" small>
-                                    <v-icon small>mdi-calendar-month</v-icon>
-<!--                  📅-->
+                  <v-icon small>mdi-calendar-month</v-icon>
+                  <!--                  📅-->
                 </v-btn>
 
                 <v-btn @click="onClickToggleWeek" small>
-                                    <v-icon small>mdi-view-week-outline</v-icon>
-<!--                  📄-->
+                  <v-icon small>mdi-view-week-outline</v-icon>
+                  <!--                  📄-->
                 </v-btn>
               </v-btn-toggle>
 
@@ -47,7 +47,7 @@
                 :interval-format="intervalFormat"
             >
               <template v-slot:event="{ event }">
-                <div class="v-event-summary"  v-html="displayEvent(event)"></div>
+                <div class="v-event-summary" v-html="displayEvent(event)"></div>
               </template>
             </v-calendar>
           </v-sheet>
@@ -108,7 +108,6 @@ export default {
       }
       const startMonth = Number.parseInt(this.monthFormatter(start))
       const endMonth = Number.parseInt(this.monthFormatter(end))
-      // const suffixMonth = startMonth === endMonth ? '' : endMonth
       const startYear = start.year
       const endYear = end.year
       const suffixYear = startYear === endYear ? '' : startYear + '.'
@@ -202,7 +201,7 @@ export default {
     },
     toISOString(date) {
       const {year, month, day, hour, minute} = date
-      return new Date(year, month-1, day, hour, minute).toISOString();
+      return new Date(year, month - 1, day, hour, minute).toISOString();
     },
     clickOutside() {
       this.$store.dispatch('setSelectedOpen', false)
@@ -227,18 +226,20 @@ export default {
       return dayFormat;
     },
     intervalFormat(format) {
-      console.log(format);
       return format.time;
     },
     displayEvent(event) {
       const time = dayjs(event.start).format('HH') + ' ';
       const quota = `${event.details.attendees.length}/${event.details.maxCount}`
-      return `<div style="display: inline;">${time}시</div> <div style="display: inline; overflow: auto">(${quota})</div>`
+      return this.type === 'month' ? `<div style="display: inline-block;">${time}시</div> <div style="display: inline-block;">(${quota})</div>` :
+          `<div>${time}시</div> <div>(${quota})</div>`
     }
   }
 }
 </script>
 
 <style>
-
+.v-event-summary {
+  padding-left: 3px;
+}
 </style>

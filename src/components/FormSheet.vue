@@ -277,7 +277,7 @@ export default {
       try {
         await axios.patch(`${process.env.VUE_APP_GOOGLE_API}/calendar/v3/calendars/${calendarID}/events/${this.model.id}?key=${googleKey}`, body, config).then((_data, error) => {
           if (error) {
-            this.$store.dispatch('setFailureMessage', '예약에 실패했습니다. 관리자에게 문의해주세요👨‍💻')
+            this.$store.dispatch('setFailureMessage', '예약에 실패했습니다. 관리자에게 문의해주세요👾')
             this.$store.dispatch('setFailureSnackbarOpen', true);
             this.$store.dispatch('setSelectedOpen', false);
 
@@ -286,7 +286,7 @@ export default {
             }, 4000)
             return
           }
-          this.$store.dispatch('setSuccessMessage', '예약 성공🥰 🤸‍♀️🙏🎈👨‍🎤🎉')
+          this.$store.dispatch('setSuccessMessage', '예약 성공🥰 🤸‍♀️🙏🎈👨‍🎤🎉😺♥🧎‍♀️🧎‍♂️')
           this.$store.dispatch('setSuccessSnackbarOpen', true);
           setTimeout(() => {
             this.$store.dispatch('setSuccessSnackbarOpen', false)
@@ -318,7 +318,7 @@ export default {
 
       await this.$store.dispatch('setSelectedOpen', false);
 
-      if (this.selectedAttendee.mobile.substr(7, 4) === this.otp) {
+      if (this.selectedAttendee.mobile.substr(this.selectedAttendee.mobile.length - 4, 4) === this.otp) {
 
         this.event.details.attendees = this.event.details.attendees.filter((attendee) => {
           return !(attendee.name === this.selectedAttendee.name && attendee.mobile === this.selectedAttendee.mobile)
@@ -349,7 +349,7 @@ export default {
         try {
           await axios.patch(`${process.env.VUE_APP_GOOGLE_API}/calendar/v3/calendars/${calendarID}/events/${this.model.id}?key=${googleKey}`, body, config).then((_data, error) => {
             if (error) {
-              this.$store.dispatch('setFailureMessage', '예약취소가 안됐어요. 관리자에게 문의해주세요👨‍💻')
+              this.$store.dispatch('setFailureMessage', '예약취소에 실패했어요. 관리자에게 문의해주세요👾')
               this.$store.dispatch('setFailureSnackbarOpen', true);
               this.$store.dispatch('setSelectedOpen', false);
 
@@ -377,7 +377,18 @@ export default {
         }
 
         this.deleteModalOpen = false;
+      } else {
+        console.log(1)
+        await this.$store.dispatch('setFailureMessage', '잘못 입력하셨어요 👅')
+        await this.$store.dispatch('setFailureSnackbarOpen', true);
+
+        console.log(this.$store.state.failureMessage);
+        console.log(this.$store.state.failureSnackbarOpen);
+        setTimeout(() => {
+          this.$store.dispatch('setFailureSnackbarOpen', false)
+        }, 4000)
       }
+
     },
     clickDialogOk() {
       this.dialogOpen = false;
