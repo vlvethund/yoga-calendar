@@ -4,12 +4,13 @@
     <v-app-bar
       app
       color="#F7F7F7"
+      dense
     >
       <div class="d-flex align-center">
-     <h1>mindeulle.yoga</h1>
+     <h2>mindeulle.yoga</h2>
         <v-img
             src="./assets/dandelion.png"
-            max-width="30"
+            max-width="25"
         />
       </div>
     </v-app-bar>

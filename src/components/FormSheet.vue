@@ -1,7 +1,10 @@
 <template>
   <div>
     <v-card>
-      <v-card-title> 예약 정보 [ {{ reservatingDate }} ]</v-card-title>
+      <v-card-title>
+        예약 정보
+        [ {{ reservatingDate }} ]
+      </v-card-title>
       <v-card-text>
         <v-card>
           <v-container
@@ -30,6 +33,7 @@
                     @input="onMobileInput"
                     @keydown="onsomething"
                     :rules="this.rulesMobile"
+                    pattern="\d*"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -37,9 +41,7 @@
               <v-card-actions>
                 <v-btn @click="reserve" color="#FFD600" :disabled="this.reserveButtonDisabled">예약하기🧘‍♀️</v-btn>
               </v-card-actions>
-
             </v-row>
-
           </v-container>
         </v-card>
         <v-spacer></v-spacer>
@@ -53,13 +55,8 @@
                     <template v-slot:default>
                       <thead>
                       <tr>
-                        <th class="text-field" :rowspan="2">이름</th>
-                        <th></th>
-                        <th class="text-field" :rowspan="3">전화번호</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                        <th class="text-field">이름</th>
+                        <th class="text-field">전화번호</th>
                       </tr>
                       </thead>
                       <tbody>
@@ -71,21 +68,20 @@
                           <v-avatar :color="randomColors[index]" :size="5"></v-avatar>
                           <span>{{ attendee.name }}</span>
                         </td>
-                        <td></td>
-                        <td>{{ attendee.mobile.substr(3, 1) }}XXX-XXXX</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
                         <td>
-                          <v-btn
-                              icon
-                              small
-                              class="mx-2"
-                              color="none"
-                              @click="()=>onClickDeleteBtn(attendee)"
-                          >
-                            <v-icon v-text="deleteIcon"></v-icon>
-                          </v-btn>
+                          <v-row justify="space-around">
+                            {{ attendee.mobile.substr(3, 1) }}XXX-XXXX
+                            <v-btn
+                                icon
+                                small
+                                class="mx-2"
+                                color="none"
+                                @click="()=>onClickDeleteBtn(attendee)"
+                            >
+                              <v-icon v-text="deleteIcon"></v-icon>
+                            </v-btn>
+                          </v-row>
+
                         </td>
                       </tr>
                       </tbody>
@@ -139,11 +135,10 @@
           <v-card-text>
             <v-row>
               <v-col md="6">
-                <v-otp-input v-model="otp" length="4"></v-otp-input>
+                <v-otp-input v-model="otp" length="4" type="number" pattern="\d*"></v-otp-input>
               </v-col>
             </v-row>
             예약 취소를 위해 핸드폰 번호 끝 4자리를 입력하세요
-
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
@@ -241,7 +236,7 @@ export default {
 
       if (attendees.length >= maxCount) {
         this.dialogOpen = true;
-        this.dialogMsg = '죄송해요. 정원이 가득 찼습니다.'
+        this.dialogMsg = '죄송해요 정원이 가득 찼습니다'
         this.okMsg = '어쩔 수 없죠😥'
         return;
       }
