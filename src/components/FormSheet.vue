@@ -33,6 +33,7 @@
                     @input="onMobileInput"
                     @keydown="onsomething"
                     :rules="this.rulesMobile"
+                    type="number"
                     pattern="\d*"
                 ></v-text-field>
               </v-col>
@@ -207,7 +208,7 @@ export default {
       dialogOpen: false,
       dialogMsg: '',
       rulesMobile: [
-        value => !!value || '핸드폰 번호를 꼭 입력하셔야되요',
+        value => !!value || '핸드폰 번호를 꼭 입력하셔야돼요',
         value => (value || '').length < 12 || '11자리만 입력해주세요!!',
         value => {
           return numberPattern.test(value) || '숫자만 입력해주세요!!'
