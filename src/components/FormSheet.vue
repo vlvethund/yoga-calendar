@@ -378,12 +378,9 @@ export default {
 
         this.deleteModalOpen = false;
       } else {
-        console.log(1)
         await this.$store.dispatch('setFailureMessage', '잘못 입력하셨어요 👅')
         await this.$store.dispatch('setFailureSnackbarOpen', true);
 
-        console.log(this.$store.state.failureMessage);
-        console.log(this.$store.state.failureSnackbarOpen);
         setTimeout(() => {
           this.$store.dispatch('setFailureSnackbarOpen', false)
         }, 4000)

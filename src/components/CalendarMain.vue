@@ -79,6 +79,9 @@ export default {
   components: {
     FormSheet,
   },
+  mounted() {
+    setInterval(() => this.getEvents(), 5000);
+  },
   data: () => ({
     today: new Date().toISOString().substr(0, 10),
     focus: new Date().toISOString().substr(0, 10),
@@ -131,19 +134,17 @@ export default {
   },
   methods: {
     async getEvents() {
-      this.events = [];
       const calendarID = staticField.calendarID
-      const minTime = this.toISOString(this.start)
-      const maxTime = this.toISOString(this.end)
+      const minTime = dayjs(`${this.start.date} ${this.start.hour}:${this.start.minute}`).subtract(1,'M').startOf('month').startOf('week').toDate().toISOString()
+      const maxTime = dayjs(`${this.start.date} ${this.start.hour}:${this.start.minute}`).add(1, 'M').endOf('month').startOf('week').toDate().toISOString()
       const googleKey = staticField.googleKey
 
-      const {data} = await axios.get(`${process.env.VUE_APP_GOOGLE_API}/calendar/v3/calendars/${calendarID}/events?orderBy=startTime&singleEvents=true&timeMax=${maxTime}&timeMin=${minTime}&key=${googleKey}`)
-
+      const {data} = await axios.get(`${process.env.VUE_APP_GOOGLE_API}/calendar/v3/calendars/${calendarID}/events?orderBy=startTime&singleEvents=true&timeMax=${maxTime}&timeMin=${minTime}&key=${googleKey}&fields=items(id,summary,description,start,end)`)
       data.items.map(({description, start, end, id}) => {
         let details;
         let defaultMaxCount = 3;
         const defaultDescription = `{"attendees": [],"maxCount": ${defaultMaxCount}}`;
-        details = JSON.parse(defaultDescription)
+        details = JSON.parse(defaultDescription);
 
         if (description) {
           if (Number.parseInt(description)) {
@@ -153,16 +154,26 @@ export default {
           }
         }
 
-        const hourForColor = new Date(start.dateTime).getHours()
-        this.events.push({
-          name: `(${details.attendees.length}/${details.maxCount})`,
-          color: staticField.colors[hourForColor - 9],
-          start: new Date(start.dateTime),
-          end: new Date(end.dateTime),
-          timed: true,
-          details,
-          id,
-        });
+        const eventName = `(${details.attendees.length}/${details.maxCount})`
+
+        const hourForColor = new Date(start.dateTime).getHours();
+        if (!this.events.some(event => event.id === id)) {
+
+          this.events.push({
+            name: eventName,
+            color: staticField.colors[hourForColor - 9],
+            start: new Date(start.dateTime),
+            end: new Date(end.dateTime),
+            timed: true,
+            details,
+            id,
+          });
+        } else {
+          this.events.filter(event => event.id === id).map(event => {
+            event.details = details
+            event.name = eventName
+          })
+        }
       })
     },
     viewDay({date}) {
@@ -199,10 +210,6 @@ export default {
       this.end = end
       this.getEvents();
     },
-    toISOString(date) {
-      const {year, month, day, hour, minute} = date
-      return new Date(year, month - 1, day, hour, minute).toISOString();
-    },
     clickOutside() {
       this.$store.dispatch('setSelectedOpen', false)
     },
@@ -222,17 +229,16 @@ export default {
       if (format.day === 1) {
         dayFormat = `${format.month}.${format.day}`
       }
-
       return dayFormat;
     },
     intervalFormat(format) {
       return format.time;
     },
     displayEvent(event) {
-      const time = dayjs(event.start).format('HH') + ' ';
+      const time = `${dayjs(event.start).format('HH:mm')}`
       const quota = `${event.details.attendees.length}/${event.details.maxCount}`
-      return this.type === 'month' ? `<div style="display: inline-block;">${time}시</div> <div style="display: inline-block;">(${quota})</div>` :
-          `<div>${time}시</div> <div>(${quota})</div>`
+      return this.type === 'month' ? `<div style="display: inline-block;">${time}</div> <div style="display: inline-block; overflow: no-display">(${quota})</div>` :
+          `<div>${time}</div> <div>(${quota})</div>`
     }
   }
 }
