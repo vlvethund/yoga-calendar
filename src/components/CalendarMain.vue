@@ -27,7 +27,7 @@
 
             </v-toolbar>
           </v-sheet>
-          <v-sheet height="80vh">
+          <v-sheet height="100vh">
             <v-calendar
                 ref="calendar"
                 v-model="focus"
@@ -218,8 +218,8 @@ export default {
       this.type = 'month';
     },
     onClickToggleWeek() {
-      this.toggleExclusive = 1
-      this.type = 'week';
+      this.type = 'week'
+      this.toggleExclusive = 1;
     },
     onKeyDown(e) {
       Util.keyDownEventHandler(e, () => this.$store.dispatch('setSelectedOpen', false));

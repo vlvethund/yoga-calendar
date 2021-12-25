@@ -223,7 +223,9 @@ export default {
   },
   computed: {
     reservatingDate() {
-      return dayjs(this.model.start).format('M월 DD일 HH시');
+      const start = dayjs(this.model.start)
+      const minute = start.format('mm')
+      return start.format('M월 DD일 HH시')+ minute === '00'? '': ` ${minute}분`;
     },
     randomColors() {
       return Util.shuffleArray(staticField.colors)
