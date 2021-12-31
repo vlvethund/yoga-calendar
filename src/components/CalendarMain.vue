@@ -142,7 +142,7 @@ export default {
       const {data} = await axios.get(`${process.env.VUE_APP_GOOGLE_API}/calendar/v3/calendars/${calendarID}/events?orderBy=startTime&singleEvents=true&timeMax=${maxTime}&timeMin=${minTime}&key=${googleKey}&fields=items(id,summary,description,start,end)`)
       data.items.map(({description, start, end, id}) => {
         let details;
-        let defaultMaxCount = 3;
+        let defaultMaxCount = 4;
         const defaultDescription = `{"attendees": [],"maxCount": ${defaultMaxCount}}`;
         details = JSON.parse(defaultDescription);
 
