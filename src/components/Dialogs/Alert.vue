@@ -1,9 +1,12 @@
 <template>
   <div class="text-center">
     <v-card>
-      <v-card-title class="text-h5 ">
+      <v-card-title class="text-h6">
         {{ msg }}
       </v-card-title>
+      <v-card-text>
+        {{ subMsg }}
+      </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
@@ -20,7 +23,7 @@
 <script>
 export default {
   name: 'alert',
-  props: ['msg', 'okMsg'],
+  props: ['msg', 'okMsg', 'subMsg'],
   methods: {
     onClickOk() {
       this.$emit('clickDialogOk')
@@ -28,3 +31,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.v-card__text {
+  color: black;
+}
+</style>

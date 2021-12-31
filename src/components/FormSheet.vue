@@ -164,6 +164,7 @@
       >
         <alert
             :msg="this.dialogMsg"
+            :sub-msg="this.dialogSubMsg"
             :ok-msg="this.okMsg"
             @clickDialogOk="clickDialogOk"
         />
@@ -207,6 +208,7 @@ export default {
       selectedAttendee: null,
       dialogOpen: false,
       dialogMsg: '',
+      dialogSubMsg: '',
       rulesMobile: [
         value => !!value || '핸드폰 번호를 꼭 입력하셔야돼요',
         value => (value || '').length < 12 || '11자리만 입력해주세요!!',
@@ -312,6 +314,22 @@ export default {
     onsomething() {
     },
     onClickDeleteBtn(attendee) {
+      const today = dayjs();
+
+      if (dayjs(this.event.start).isSame(dayjs(), 'date')) {
+        this.dialogMsg = "앱에서는 당일 취소가 불가합니다..!";
+        this.dialogSubMsg="수업 당일 예약 취소를 원하시면 민들레 요가로 연락주세요🙇‍♀️(횟수는 차감됩니다)"
+        this.okMsg = "알겠어요🤦‍♀️";
+        this.dialogOpen = true;
+        return;
+      }
+
+      if (dayjs(this.event.start).isBefore(today, 'date')) {
+        this.dialogMsg = "이미. 과거. 지난. 예약. 🤖";
+        this.okMsg = "아하😕";
+        this.dialogOpen = true;
+        return;
+      }
       this.deleteModalOpen = true;
 
       this.selectedAttendee = attendee
@@ -394,11 +412,7 @@ export default {
       this.dialogOpen = false;
     },
     activateReserveButton() {
-      if (numberPattern.test(this.mobile) && this.mobile && mobilePattern.test(this.mobile) && this.name && (this.mobile || '').length < 12) {
-        this.reserveButtonDisabled = false;
-      } else {
-        this.reserveButtonDisabled = true;
-      }
+      this.reserveButtonDisabled = !(numberPattern.test(this.mobile) && this.mobile && mobilePattern.test(this.mobile) && this.name && (this.mobile || '').length < 12);
     },
     onDeleteModalKeyDown(e) {
       Util.keyDownEventHandler(e, () => this.deleteModalOpen = false);
