@@ -168,7 +168,8 @@ export default {
             details,
             id,
           });
-        } else {
+        }
+        else {
           this.events.filter(event => event.id === id).map(event => {
             event.details = details
             event.name = eventName

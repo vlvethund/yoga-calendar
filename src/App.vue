@@ -1,5 +1,4 @@
 <template>
-  <div class="aaaa">
     <v-app>
       <v-app-bar
           app
@@ -20,7 +19,6 @@
         <failure-snackbar/>
       </v-main>
     </v-app>
-  </div>
 </template>
 
 <script>
