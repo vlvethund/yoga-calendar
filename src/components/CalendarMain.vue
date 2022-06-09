@@ -83,8 +83,8 @@ export default {
     setInterval(() => this.getEvents(), 5000);
   },
   data: () => ({
-    today: new Date().toISOString().substr(0, 10),
-    focus: new Date().toISOString().substr(0, 10),
+    today: new Date(new Date().getTime() + (new Date().getTimezoneOffset() * 60 * 1000) + 9*60*60*1000).toISOString().substr(0, 10),
+    focus: new Date(new Date().getTime() + (new Date().getTimezoneOffset() * 60 * 1000) + 9*60*60*1000).toISOString().substr(0, 10),
     type: 'month',
     typeToLabel: {
       month: 'Month',
