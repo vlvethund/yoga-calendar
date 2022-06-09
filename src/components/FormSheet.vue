@@ -91,21 +91,6 @@
                 </v-list-item-content>
               </v-list-item>
             </v-list>
-            <!--            <v-list-item-group>-->
-            <!--              <v-list-item v-for="(attendee, index) in event.details.attendees" :key="index">-->
-            <!--                <v-list-item-icon>-->
-            <!--                  <v-avatar color="indigo" :size="29">-->
-            <!--                    <span class="white&#45;&#45;text text-h9">{{ attendee.name.substring(0, 1) }}</span>-->
-            <!--                  </v-avatar>-->
-            <!--                </v-list-item-icon>-->
-            <!--                <v-list-item-content>-->
-            <!--                  <v-list-item-title v-text="attendee.name"></v-list-item-title>-->
-            <!--                </v-list-item-content>-->
-            <!--                <v-list-item-icon>-->
-            <!--                  <v-icon v-text="deleteIcon"></v-icon>-->
-            <!--                </v-list-item-icon>-->
-            <!--              </v-list-item>-->
-            <!--            </v-list-item-group>-->
           </div>
           <div v-else>
             <v-list>

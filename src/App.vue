@@ -14,9 +14,9 @@
         </div>
       </v-app-bar>
       <v-main>
-        <calendar-main/>
         <success-snackbar/>
         <failure-snackbar/>
+        <calendar-main/>
       </v-main>
     </v-app>
 </template>
