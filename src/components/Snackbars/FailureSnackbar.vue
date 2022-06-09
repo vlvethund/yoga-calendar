@@ -3,10 +3,9 @@
       :timeout="-1"
       v-model="$store.state.failureSnackbarOpen"
       color="red"
-      absolute
       right
       rounded="pill"
-      top
+      bottom
   >
     {{ this.$store.state.failureMessage }}
   </v-snackbar>

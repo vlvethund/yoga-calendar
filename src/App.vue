@@ -14,10 +14,10 @@
         </div>
       </v-app-bar>
       <v-main>
-        <success-snackbar/>
-        <failure-snackbar/>
         <calendar-main/>
       </v-main>
+      <success-snackbar/>
+      <failure-snackbar/>
     </v-app>
 </template>
 
