@@ -2,14 +2,15 @@
     <v-app>
       <v-app-bar
           app
-          color="#F7F7F7"
           dense
+          elevation="0"
+          color="white"
+          class="d-flex justify-center"
       >
-        <div class="d-flex align-center">
-          <h2>mindeulle.yoga</h2>
+        <div class="align-center">
           <v-img
-              src="./assets/dandelion.png"
-              max-width="25"
+              src="./assets/logo.png"
+              max-width="95"
           />
         </div>
       </v-app-bar>

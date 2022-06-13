@@ -15,7 +15,7 @@
               <v-col cols="10">
                 <v-text-field
                     label="이름"
-                    color="#FEA401"
+                    color="#fff300"
                     prepend-icon="mdi-account-circle"
                     :value="this.$data.name"
                     @input="onNameInput"
@@ -27,7 +27,7 @@
               <v-col cols="10">
                 <v-text-field
                     label="전화번호"
-                    color="#FEA401"
+                    color="#fff300"
                     prepend-icon="mdi-phone"
                     :value="mobile"
                     @input="onMobileInput"
@@ -40,7 +40,7 @@
             </v-row>
             <v-row justify="center">
               <v-card-actions>
-                <v-btn @click="reserve" color="#FFD600" :disabled="this.reserveButtonDisabled">예약하기🧘‍♀️</v-btn>
+                <v-btn @click="reserve" color="#fff300" :disabled="this.reserveButtonDisabled">🧘🏻‍♀ 예약하기 🧘🏻‍♂️</v-btn>
               </v-card-actions>
             </v-row>
           </v-container>
@@ -276,7 +276,7 @@ export default {
             }, 4000)
             return
           }
-          this.$store.dispatch('setSuccessMessage', '예약 성공🥰 🤸‍♀️🙏🎈👨‍🎤🎉😺♥🧎‍♀️🧎‍♂️')
+          this.$store.dispatch('setSuccessMessage', '🌼 예약 성공 🌼')
           this.$store.dispatch('setSuccessSnackbarOpen', true);
           setTimeout(() => {
             this.$store.dispatch('setSuccessSnackbarOpen', false)
