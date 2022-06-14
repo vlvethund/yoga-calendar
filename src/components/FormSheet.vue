@@ -6,7 +6,7 @@
         [ {{ reservatingDate }} ]
       </v-card-title>
       <v-card-text>
-        <v-card>
+        <v-card elevation="0">
           <v-container
               id="input-usage"
               fluid
@@ -15,7 +15,7 @@
               <v-col cols="10">
                 <v-text-field
                     label="이름"
-                    color="#fff300"
+                    color="black"
                     prepend-icon="mdi-account-circle"
                     :value="this.$data.name"
                     @input="onNameInput"
@@ -27,7 +27,7 @@
               <v-col cols="10">
                 <v-text-field
                     label="전화번호"
-                    color="#fff300"
+                    color="black"
                     prepend-icon="mdi-phone"
                     :value="mobile"
                     @input="onMobileInput"
@@ -46,7 +46,7 @@
           </v-container>
         </v-card>
         <v-spacer></v-spacer>
-        <v-card min-height="200">
+        <v-card min-height="200" elevation="0">
           <div v-if="event.details.attendees.length !==0">
             <v-list>
               <v-subheader>예약자 명단 ({{ event.details.attendees.length }}/{{ event.details.maxCount }})</v-subheader>

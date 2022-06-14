@@ -72,7 +72,12 @@ import axios from 'axios';
 import staticField from '../assets/static'
 import FormSheet from './FormSheet';
 import dayjs from 'dayjs'
+import timezone from 'dayjs/plugin/timezone'
+import utc from 'dayjs/plugin/utc'
 import Util from '../assets/util'
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export default {
   name: 'calendar-main',
@@ -83,8 +88,8 @@ export default {
     setInterval(() => this.getEvents(), 5000);
   },
   data: () => ({
-    today: new Date(new Date().getTime() + (new Date().getTimezoneOffset() * 60 * 1000) + 9*60*60*1000).toISOString().substr(0, 10),
-    focus: new Date(new Date().getTime() + (new Date().getTimezoneOffset() * 60 * 1000) + 9*60*60*1000).toISOString().substr(0, 10),
+    today: dayjs(new Date()).tz('Asia/Seoul').toISOString().substr(0, 10),
+    focus: dayjs(new Date()).tz('Asia/Seoul').toISOString().substr(0, 10),
     type: 'month',
     typeToLabel: {
       month: 'Month',
