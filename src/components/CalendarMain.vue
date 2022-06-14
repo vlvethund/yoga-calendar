@@ -4,7 +4,7 @@
       <v-row class="fill-height">
         <v-col>
           <v-sheet height="64">
-            <v-toolbar flat color="white" dense>
+            <v-toolbar flat color="white" class="pr-0 pl-0">
               <v-btn fab text small @click="prev">
                 <v-icon dense>mdi-chevron-left</v-icon>
               </v-btn>
@@ -16,15 +16,11 @@
               <v-btn-toggle v-model="toggleExclusive" dense mandatory borderless>
                 <v-btn @click="onClickToggleMonth" small>
                   <v-icon small>mdi-calendar-month</v-icon>
-                  <!--                  📅-->
                 </v-btn>
-
                 <v-btn @click="onClickToggleWeek" small>
                   <v-icon small>mdi-view-week-outline</v-icon>
-                  <!--                  📄-->
                 </v-btn>
               </v-btn-toggle>
-
             </v-toolbar>
           </v-sheet>
           <v-sheet height="90vh">
@@ -166,7 +162,7 @@ export default {
 
           this.events.push({
             name: eventName,
-            color: staticField.colors[hourForColor - 9],
+            color: staticField.timeColors[hourForColor - 9],
             start: new Date(start.dateTime),
             end: new Date(end.dateTime),
             timed: true,

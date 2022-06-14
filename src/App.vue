@@ -11,6 +11,7 @@
           <v-img
               src="./assets/logo.png"
               max-width="95"
+              class="mt-4"
           />
         </div>
       </v-app-bar>
